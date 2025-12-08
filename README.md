@@ -35,3 +35,21 @@ Notes:
 Backend uses Spring Boot with REST API endpoints.
 Each microservice handles a single responsibility (Task management, optional User management).
 MS SQL holds all persistent data.
+
+task-manager-backend/
+│
+├─ src/main/java/com/example/taskmanager/
+│   ├─ controller/
+│   │   └─ TaskController.java
+│   ├─ model/
+│   │   └─ Task.java
+│   ├─ repository/
+│   │   └─ TaskRepository.java
+│   ├─ service/
+│   │   └─ TaskService.java
+│   └─ TaskManagerApplication.java
+│
+├─ src/main/resources/
+│   ├─ application.properties
+│
+├─ pom.xml
