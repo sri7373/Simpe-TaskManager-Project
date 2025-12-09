@@ -1,0 +1,5 @@
+com/eiu/taskmanager/TaskManagerApplication.class
+com/eiu/taskmanager/controller/TaskController.class
+com/eiu/taskmanager/model/Task.class
+com/eiu/taskmanager/service/TaskService.class
+com/eiu/taskmanager/repository/TaskRepository.class
