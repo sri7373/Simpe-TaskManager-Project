@@ -1,0 +1,8 @@
+DATABASE stores the data.
+ENTITY represents the data in Java.
+REPOSITORY reads/writes the data.
+SERVICE applies rules and logic.
+CONTROLLER exposes endpoints to the outside world.
+SWAGGER / TEST confirms everything is working.
+
+(DATABASE → ENTITY → REPOSITORY → SERVICE → CONTROLLER → SWAGGER TEST)
