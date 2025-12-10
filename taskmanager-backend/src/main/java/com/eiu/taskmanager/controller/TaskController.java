@@ -2,6 +2,9 @@ package com.eiu.taskmanager.controller;
 
 import com.eiu.taskmanager.model.Task;
 import com.eiu.taskmanager.service.TaskService;
+
+import com.eiu.taskmanager.dto.TaskRequestDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +25,12 @@ public class TaskController {
     // ==============================
     // CREATE TASK
     // ==============================
-    @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        if (task.getPriority() == null) task.setPriority("Medium");
 
-        Task createdTask = taskService.createTask(task);
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody TaskRequestDTO taskDTO) {
+        Task createdTask = taskService.createTask(taskDTO);
         return ResponseEntity.ok(createdTask);
-    }
+    } 
 
     // ==============================
     // GET ALL TASKS
@@ -79,7 +81,7 @@ public class TaskController {
     }
 
     // ==============================
-    // OPTIONAL: GET TASKS BY STATUS
+    // GET TASKS BY STATUS
     // ==============================
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Task>> getTasksByStatus(@PathVariable String status) {
@@ -91,6 +93,13 @@ public class TaskController {
     @GetMapping("/priority/{priority}")
     public ResponseEntity<List<Task>> getTasksByPriority(@PathVariable String priority){
         List<Task> tasks = taskService.getTasksByPriority(priority);
+        return ResponseEntity.ok(tasks);
+    }
+
+    // New endpoint: Get tasks by owner ID
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<Task>> getTasksByOwner(@PathVariable Long ownerId) {
+        List<Task> tasks = taskService.getTasksByOwnerId(ownerId);
         return ResponseEntity.ok(tasks);
     }
 }

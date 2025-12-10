@@ -20,6 +20,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query
     List<Task> findByPriority(String priority);
 
+    // New method to: Find all tasks by owner (user) ID
+    List<Task> findByOwnerId(Long ownerId);
+
     // You can add more query methods as needed, Spring Data generates the SQL automatically
 }
 

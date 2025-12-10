@@ -2,8 +2,14 @@ package com.eiu.taskmanager.service;
 
 import com.eiu.taskmanager.model.Task;
 import com.eiu.taskmanager.repository.TaskRepository;
+
+import com.eiu.taskmanager.dto.TaskRequestDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.eiu.taskmanager.model.User;
+import com.eiu.taskmanager.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,21 +18,34 @@ import java.util.Optional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     @Autowired  // Spring injects the TaskRepository automatically
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, UserRepository userRepository) {
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
 
     // ==============================
     // CREATE / SAVE TASK
     // ==============================
-    public Task createTask(Task task) {
-        if (task.getPriority() == null) {
-        task.setPriority("Medium");
-    }
-        return taskRepository.save(task);
-    }
+
+    public Task createTask(TaskRequestDTO taskDTO) {
+    User owner = userRepository.findById(taskDTO.getOwnerId())
+            .orElseThrow(() -> new RuntimeException("User not found with id " + taskDTO.getOwnerId()));
+
+    Task task = new Task(
+        taskDTO.getTitle(),
+        taskDTO.getDescription(),
+        taskDTO.getStatus(),
+        taskDTO.getPriority(),
+        taskDTO.getDueDate(),
+        owner
+    );
+
+    return taskRepository.save(task);
+    }   
+
 
     // ==============================
     // GET ALL TASKS
@@ -78,6 +97,13 @@ public class TaskService {
 
     public List<Task> getTasksByPriority(String priority){
     return taskRepository.findByPriority(priority);
+    }
+
+    // Optional: To get tasks based on who owns it 
+    // (i.e tasks each user is in charge of)
+    
+    public List<Task> getTasksByOwnerId(Long ownerId) {
+        return taskRepository.findByOwnerId(ownerId);
     }
 
 }

@@ -1,4 +1,5 @@
 package com.eiu.taskmanager.model;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
 
@@ -30,15 +31,24 @@ public class Task {
     @Column(name = "DueDate")
     private LocalDate dueDate; // can be null initially
 
+    // Link to User
+    @ManyToOne
+    @JoinColumn(name = "user_id") // column in tasks table
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // prevent infinite loop in JSON
+    private User owner;
+
     // ==========================
     // Constructors
     // ==========================
     public Task() {} // Default constructor required by JPA
 
-    public Task(String title, String description, String status) {
+    public Task(String title, String description, String status, String priority, LocalDate dueDate, User owner) {
         this.title = title;
         this.description = description;
         this.status = status;
+        this.priority = priority;
+        this.dueDate = dueDate;
+        this.owner = owner;
     }
 
     // ==========================
@@ -81,18 +91,27 @@ public class Task {
     public LocalDate getDueDate() { return dueDate; }
     public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
 
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     // Optional: toString() for debugging
     @Override
 
     public String toString() {
-    return "Task{" +
-            "id=" + id +
-            ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
-            ", status='" + status + '\'' +
-            ", dueDate=" + dueDate +
-            ", priority='" + priority + '\'' +
-            '}';
+        return "Task{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                ", priority='" + priority + '\'' +
+                ", dueDate=" + dueDate +
+                ", owner=" + (owner != null ? owner.getUsername() : null) +
+                '}';
     }
 
 }
