@@ -65,15 +65,20 @@ public class TaskService {
     // UPDATE TASK
     // ==============================
     public Task updateTask(Long id, Task updatedTask) {
-        return taskRepository.findById(id)
-                .map(task -> {
-                    task.setTitle(updatedTask.getTitle());
-                    task.setDescription(updatedTask.getDescription());
-                    task.setStatus(updatedTask.getStatus());
-                    return taskRepository.save(task);
-                })
-                .orElseThrow(() -> new RuntimeException("Task not found with id " + id));
-    }
+    return taskRepository.findById(id)
+            .map(task -> {
+                task.setTitle(updatedTask.getTitle());
+                task.setDescription(updatedTask.getDescription());
+                task.setStatus(updatedTask.getStatus());
+                task.setPriority(updatedTask.getPriority());
+                task.setDueDate(updatedTask.getDueDate());
+                task.setNotificationSent(updatedTask.isNotificationSent()); // <- important
+                task.setOwner(updatedTask.getOwner()); // optional if owner can change
+                return taskRepository.save(task);
+            })
+            .orElseThrow(() -> new RuntimeException("Task not found with id " + id));
+}
+
 
     // ==============================
     // DELETE TASK
@@ -101,7 +106,7 @@ public class TaskService {
 
     // Optional: To get tasks based on who owns it 
     // (i.e tasks each user is in charge of)
-    
+
     public List<Task> getTasksByOwnerId(Long ownerId) {
         return taskRepository.findByOwnerId(ownerId);
     }
