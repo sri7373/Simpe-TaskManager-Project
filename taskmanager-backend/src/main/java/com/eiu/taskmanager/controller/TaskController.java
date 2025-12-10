@@ -24,6 +24,8 @@ public class TaskController {
     // ==============================
     @PostMapping
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        if (task.getPriority() == null) task.setPriority("Medium");
+
         Task createdTask = taskService.createTask(task);
         return ResponseEntity.ok(createdTask);
     }
@@ -53,6 +55,9 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
         try {
+            // Optional: keep default if not provided
+            if (task.getPriority() == null) task.setPriority("Medium");
+
             Task updatedTask = taskService.updateTask(id, task);
             return ResponseEntity.ok(updatedTask);
         } catch (RuntimeException e) {
@@ -79,6 +84,13 @@ public class TaskController {
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Task>> getTasksByStatus(@PathVariable String status) {
         List<Task> tasks = taskService.getTasksByStatus(status);
+        return ResponseEntity.ok(tasks);
+    }
+
+    // GET tasks by priority
+    @GetMapping("/priority/{priority}")
+    public ResponseEntity<List<Task>> getTasksByPriority(@PathVariable String priority){
+        List<Task> tasks = taskService.getTasksByPriority(priority);
         return ResponseEntity.ok(tasks);
     }
 }

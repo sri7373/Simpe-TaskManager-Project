@@ -1,5 +1,7 @@
 package com.eiu.taskmanager.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 
 @Entity                       // Marks this class as a JPA entity
@@ -18,6 +20,15 @@ public class Task {
 
     @Column(nullable = false)
     private String status; // e.g., "Pending", "In Progress", "Done"
+
+    // New fields
+    // ========================
+
+    @Column(name = "Priority", nullable = false)
+    private String priority = "Medium"; // default value given
+
+    @Column(name = "DueDate")
+    private LocalDate dueDate; // can be null initially
 
     // ==========================
     // Constructors
@@ -64,15 +75,24 @@ public class Task {
     public void setStatus(String status) {
         this.status = status;
     }
+    public String getPriority() { return priority; }
+    public void setPriority(String priority) { this.priority = priority; }
+
+    public LocalDate getDueDate() { return dueDate; }
+    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
 
     // Optional: toString() for debugging
     @Override
+
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                '}';
+    return "Task{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            ", status='" + status + '\'' +
+            ", dueDate=" + dueDate +
+            ", priority='" + priority + '\'' +
+            '}';
     }
+
 }

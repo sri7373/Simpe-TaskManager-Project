@@ -22,6 +22,9 @@ public class TaskService {
     // CREATE / SAVE TASK
     // ==============================
     public Task createTask(Task task) {
+        if (task.getPriority() == null) {
+        task.setPriority("Medium");
+    }
         return taskRepository.save(task);
     }
 
@@ -70,4 +73,11 @@ public class TaskService {
     public List<Task> getTasksByStatus(String status) {
         return taskRepository.findByStatus(status); // Only works if you add this method in TaskRepository
     }
+
+    // Optional: get tasks by priority
+
+    public List<Task> getTasksByPriority(String priority){
+    return taskRepository.findByPriority(priority);
+    }
+
 }

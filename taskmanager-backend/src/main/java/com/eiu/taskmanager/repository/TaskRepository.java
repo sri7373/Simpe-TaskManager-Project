@@ -17,6 +17,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query
     List<Task> findByStatus(String status);
 
+    @Query
+    List<Task> findByPriority(String priority);
+
     // You can add more query methods as needed, Spring Data generates the SQL automatically
 }
 
