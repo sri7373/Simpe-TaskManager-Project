@@ -56,3 +56,5 @@ taskmanager-backend/
 
 Client  → Controller → Service → Repository → Database Tables
 (The 4 backend layers)
+
+New features are going to be added. 
