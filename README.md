@@ -60,3 +60,4 @@ Client  → Controller → Service → Repository → Database Tables
 New features are going to be added. 
 
 Going to include security as well.
+Adding jwt-auth now.
