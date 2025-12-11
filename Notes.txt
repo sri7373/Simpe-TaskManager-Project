@@ -6,3 +6,9 @@ CONTROLLER exposes endpoints to the outside world.
 SWAGGER / TEST confirms everything is working.
 
 (DATABASE → ENTITY → REPOSITORY → SERVICE → CONTROLLER → SWAGGER TEST)
+
+SpEL = Spring Expression Language. 
+It’s a small expression language 
+built into Spring that allows you to 
+dynamically evaluate expressions in annotations 
+like @PreAuthorize or @PostAuthorize.

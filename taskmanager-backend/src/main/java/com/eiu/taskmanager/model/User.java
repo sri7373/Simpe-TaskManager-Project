@@ -1,6 +1,18 @@
 package com.eiu.taskmanager.model;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -18,13 +30,17 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Email(message = "Email should be valid") // validation
+    @Email(message = "Email should be valid")
     @Column(nullable = false, unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USER; // default
+
+    // ⭐ ADD THIS — User has many tasks
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
+    private List<Task> tasks;
 
     // Constructors
     public User() {}
@@ -48,13 +64,10 @@ public class User {
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
 
-    
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
-    public String getPassword() {
-    return password;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
+    // ⭐ Added getter/setter for tasks
+    public List<Task> getTasks() { return tasks; }
+    public void setTasks(List<Task> tasks) { this.tasks = tasks; }
 }

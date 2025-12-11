@@ -1,12 +1,13 @@
 package com.eiu.taskmanager.security;
 
-import com.eiu.taskmanager.model.User;
-import com.eiu.taskmanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.eiu.taskmanager.model.User;
+import com.eiu.taskmanager.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -19,10 +20,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        // ✅ FIX: Use the role from database, not hardcoded "USER"
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getUsername())
-                .password(user.getPassword()) 
-                .roles("USER")
+                .password(user.getPassword())
+                .roles(user.getRole().toString()) // ✅ READ FROM DATABASE
                 .build();
     }
 }

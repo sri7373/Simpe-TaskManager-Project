@@ -108,3 +108,4 @@ Notes:
 The User role cannot see other users’ tasks — only their own.
 Admins have full control over everything.
 Analysts are read-only, but can see all tasks and users.
+
