@@ -61,3 +61,39 @@ New features are going to be added.
 
 Going to include security as well.
 Adding jwt-auth now.
+
+Swagger UI / Client
+       |
+       v
+AuthenticationController (/authenticate)
+       |
+       v
+AuthenticationManager
+       |
+       v
+UserDetailsServiceImpl -> DB (get user)
+       |
+       v
+BCryptPasswordEncoder (check password)
+       |
+       v
+JwtUtil.generateToken(username)
+       |
+       v
+JwtResponse -> Client (JWT)
+
+Step 2 Summary (Flow)
+
+User hits login endpoint → sends username + password
+
+AuthenticationManager checks credentials using CustomUserDetailsService
+
+If valid → JwtUtil generates a JWT token
+
+Client stores token (usually in browser or Postman)
+
+Client sends requests with Authorization: Bearer <token>
+
+JwtFilter checks the token for every request → sets authentication context
+
+Controller endpoints are protected via SecurityConfig
