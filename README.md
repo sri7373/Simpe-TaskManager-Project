@@ -97,3 +97,14 @@ Client sends requests with Authorization: Bearer <token>
 JwtFilter checks the token for every request → sets authentication context
 
 Controller endpoints are protected via SecurityConfig
+
+Roles & Permissions
+Role Permissions
+Admin Full CRUD (GET, POST, PUT, DELETE) on users and tasks
+Analyst GET only on users and tasks
+User GET only on tasks assigned to them
+
+Notes:
+The User role cannot see other users’ tasks — only their own.
+Admins have full control over everything.
+Analysts are read-only, but can see all tasks and users.
