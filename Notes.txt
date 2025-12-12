@@ -12,3 +12,11 @@ It’s a small expression language
 built into Spring that allows you to 
 dynamically evaluate expressions in annotations 
 like @PreAuthorize or @PostAuthorize.
+
+Tailwind CSS – A utility-based CSS framework that lets you style websites quickly using ready-made classes.
+
+React – A JavaScript library for building fast, interactive user interfaces using components.
+
+TypeScript – A typed version of JavaScript that helps catch errors and makes code easier to manage.
+
+Node.js – A runtime that lets you run JavaScript on the server to build backend applications.
