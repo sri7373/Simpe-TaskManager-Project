@@ -109,3 +109,17 @@ The User role cannot see other users’ tasks — only their own.
 Admins have full control over everything.
 Analysts are read-only, but can see all tasks and users.
 
+For forms feature: 
+
+deleted → Marks a form as logically removed (soft delete) without physically deleting it from the database.
+
+active → Indicates whether a form is currently usable or available for submissions.
+Useful if you want to just temporarily disable a form but not actually delete it as you could potentially reopen it again in the future.
+
+Restrictions for Forms:
+
+Endpoint	        Who can delete	                            Who cannot
+
+SurveyForm DELETE	Form owner (authenticated)	                Anyone else,unauthenticated users
+
+Submission DELETE	Submitter or Form owner (authenticated)	    Other users, unauthenticated users

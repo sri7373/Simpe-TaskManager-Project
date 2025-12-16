@@ -12,3 +12,9 @@ It’s a small expression language
 built into Spring that allows you to 
 dynamically evaluate expressions in annotations 
 like @PreAuthorize or @PostAuthorize.
+
+For forms:
+
+Endpoint	        Who can delete	                            Who cannot
+SurveyForm DELETE	Form owner (authenticated)	                Anyone else, unauthenticated users
+Submission DELETE	Submitter or Form owner (authenticated)	    Other users, unauthenticated users
