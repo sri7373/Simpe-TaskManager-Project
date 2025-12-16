@@ -7,4 +7,5 @@ public enum QuestionType {
     CHECKBOX,
     MULTIPLE_CHOICE,
     LIKERT
+    // simple usual types used 
 }

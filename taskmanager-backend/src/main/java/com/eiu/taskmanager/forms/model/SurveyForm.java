@@ -13,6 +13,7 @@ import java.util.UUID;
 @Data
 @Table(name = "survey_forms")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  // CRITICAL: Ignore Hibernate proxy stuff
+// as json doesnt understand the extra internal fields
 public class SurveyForm {
 
     @Id
@@ -28,11 +29,11 @@ public class SurveyForm {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
-    @JsonIgnoreProperties({"tasks", "password"})  // Don't serialize tasks and password
+    @JsonIgnoreProperties({"tasks", "password"})  // Don't serialize tasks and password, to not leak passwords and prevent infinite recursion
     private User owner;
 
     @OneToMany(mappedBy = "surveyForm", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("surveyForm")  // Prevent circular reference
+    @JsonIgnoreProperties("surveyForm")  // Prevent circular reference, spiralling between surveyForm and qn
     private List<Question> questions;
 
     @Column(name = "expiry_date")
@@ -50,7 +51,8 @@ public class SurveyForm {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Optional "creator" concept for convenience
+    // Optional "creator" concept for convenience, mainly for the json
+    // support diff naming conventions without changing db structure
     @Transient
     public User getCreator() {
         return owner;

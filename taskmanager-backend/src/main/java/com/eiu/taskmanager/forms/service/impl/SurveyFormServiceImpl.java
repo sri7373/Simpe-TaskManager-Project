@@ -34,7 +34,6 @@ public class SurveyFormServiceImpl implements SurveyFormService {
         form.setUpdatedAt(LocalDateTime.now());
         form.setActive(true);
 
-        // CRITICAL FIX: Set bidirectional relationships before saving
         if (form.getQuestions() != null) {
             for (Question question : form.getQuestions()) {
                 // Set the parent form reference
