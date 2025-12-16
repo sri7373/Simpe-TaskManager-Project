@@ -27,7 +27,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public Submission createSubmission(SurveyForm form, User user) {
-        
+
         if (hasUserSubmittedForm(form, user)) {
             throw new RuntimeException("User has already submitted this form");
         }
@@ -57,4 +57,26 @@ public class SubmissionServiceImpl implements SubmissionService {
         return submissionRepository
                 .existsBySurveyFormIdAndUser_Id(form.getId(), user.getId());
     }
+
+    @Override
+@Transactional
+public void deleteSubmission(UUID submissionId, User currentUser) {
+
+    Submission submission = submissionRepository
+            .findById(submissionId)
+            .orElseThrow(() -> new RuntimeException("Submission not found"));
+
+    boolean isSubmitter = submission.getUser().getId().equals(currentUser.getId());
+    boolean isFormOwner = submission.getSurveyForm()
+                                    .getOwner()
+                                    .getId()
+                                    .equals(currentUser.getId());
+
+    if (!isSubmitter && !isFormOwner) {
+        throw new RuntimeException("You are not allowed to delete this submission");
+    }
+
+    submissionRepository.delete(submission);
+}
+
 }

@@ -19,4 +19,7 @@ public interface SubmissionService {
     Submission getSubmissionById(UUID submissionId);
 
     boolean hasUserSubmittedForm(SurveyForm form, User user);
+
+    void deleteSubmission(UUID submissionId, User currentUser);
+
 }

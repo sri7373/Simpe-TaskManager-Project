@@ -10,7 +10,10 @@ import com.eiu.taskmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +42,7 @@ public class SubmissionController {
     public ResponseEntity<Submission> submitForm(@PathVariable UUID formId,
                                                  Authentication authentication,
                                                  @RequestBody List<Answer> answers) {
-        String username = authentication.getName(); // Get username from Authentication
+        String username = authentication.getName(); 
         User user = userService.getUserByUsername(username);
         SurveyForm form = surveyFormService.getFormById(formId);
 
@@ -62,5 +65,27 @@ public class SubmissionController {
     @GetMapping("/{submissionId}")
     public ResponseEntity<Submission> getSubmission(@PathVariable UUID submissionId) {
         return ResponseEntity.ok(submissionService.getSubmissionById(submissionId));
+    }
+
+    @DeleteMapping("/{submissionId}")
+    public ResponseEntity<Void> deleteSubmission(@PathVariable UUID submissionId) {
+
+        // 1. Get current user from security context
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userService.getUserByUsername(username);
+
+        // 2. Fetch submission via service
+        Submission submission = submissionService.getSubmissionById(submissionId);
+
+        // 3. Check permissions
+        if (!submission.getUser().getId().equals(currentUser.getId()) &&
+            !submission.getForm().getOwner().getId().equals(currentUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot delete this submission");
+        }
+
+        // 4. Delete using service (pass submission ID + user)
+        submissionService.deleteSubmission(submissionId, currentUser);
+
+        return ResponseEntity.noContent().build();
     }
 }

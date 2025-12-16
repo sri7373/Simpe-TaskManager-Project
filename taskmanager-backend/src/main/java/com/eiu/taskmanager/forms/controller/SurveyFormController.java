@@ -8,6 +8,7 @@ import com.eiu.taskmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class SurveyFormController {
     @PostMapping("/create")
     public ResponseEntity<SurveyForm> createForm(@RequestBody SurveyForm form,
                                                  Authentication authentication) {
-        String username = authentication.getName(); // Get username from Authentication
+        String username = authentication.getName(); 
         User creator = userService.getUserByUsername(username);
         SurveyForm created = surveyFormService.createForm(form, creator);
         return ResponseEntity.ok(created);
@@ -65,5 +66,16 @@ public class SurveyFormController {
     public ResponseEntity<Void> expireForm(@PathVariable UUID id) {
         surveyFormService.expireForm(id);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{formId}")
+    public ResponseEntity<Void> deleteSurveyForm(@PathVariable UUID formId) {
+
+        // ✅ Use the service to get current user safely
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userService.getUserByUsername(username);
+
+        surveyFormService.deleteSurveyForm(formId, currentUser);
+        return ResponseEntity.noContent().build();
     }
 }

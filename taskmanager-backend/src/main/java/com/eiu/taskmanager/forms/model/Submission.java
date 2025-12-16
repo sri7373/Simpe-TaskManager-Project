@@ -40,4 +40,12 @@ public class Submission {
     public void setRespondent(User user) {
         this.user = user;
     }
+
+    public SurveyForm getForm() {
+        return surveyForm;
+    }
+
+    public User getUser() {
+        return user;
+    }
 }

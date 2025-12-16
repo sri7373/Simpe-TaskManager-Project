@@ -22,8 +22,12 @@ public interface SurveyFormService {
     SurveyForm updateForm(UUID formId, SurveyForm updatedForm, User requester);
 
     // soft delete (using inactive, dont actually delete from db, just keep it as inactive)
-    
+
     void softDeleteForm(UUID formId, User requester);
+
+    // hard delete option as well
+    
+    void deleteSurveyForm(UUID formId, User currentUser);
 
     void expireForm(UUID formId);
 }

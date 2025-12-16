@@ -113,4 +113,21 @@ public class SurveyFormServiceImpl implements SurveyFormService {
         existingForm.setUpdatedAt(LocalDateTime.now());
         surveyFormRepository.save(existingForm);
     }
+
+    @Override
+@Transactional
+public void deleteSurveyForm(UUID formId, User currentUser) {
+
+    SurveyForm form = surveyFormRepository
+            .findById(formId)
+            .orElseThrow(() -> new RuntimeException("Survey form not found"));
+
+    if (!form.getOwner().getId().equals(currentUser.getId())) {
+        throw new RuntimeException("You are not allowed to delete this survey form");
+    }
+
+    form.setDeleted(true);
+    form.setActive(false);
+}
+
 }
