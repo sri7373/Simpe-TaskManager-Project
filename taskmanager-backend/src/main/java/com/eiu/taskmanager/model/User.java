@@ -2,6 +2,9 @@ package com.eiu.taskmanager.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +21,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "Users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})  // Ignore Hibernate proxy
 public class User {
 
     @Id
@@ -28,6 +32,7 @@ public class User {
     private String username;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  // Only allow password on input, never output
     private String password;
 
     @Email(message = "Email should be valid")
@@ -36,10 +41,10 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role = Role.USER; // default
+    private Role role = Role.USER;
 
-    // ⭐ ADD THIS — User has many tasks
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
+    @JsonIgnoreProperties("owner")  // Prevent circular reference
     private List<Task> tasks;
 
     // Constructors
@@ -67,7 +72,6 @@ public class User {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    // ⭐ Added getter/setter for tasks
     public List<Task> getTasks() { return tasks; }
     public void setTasks(List<Task> tasks) { this.tasks = tasks; }
 }

@@ -57,6 +57,14 @@
             <version>${springdoc.version}</version>
         </dependency>
 
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+
         <!-- Mail -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -13,7 +13,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
+// use setters getters library
+// @Data
+// @Getters
+// @setters
 @Entity
 @Table(name = "Tasks")
 public class Task {

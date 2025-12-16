@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -26,6 +28,9 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, 
                                     HttpServletResponse response, 
@@ -37,31 +42,25 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7).trim();
 
-            // ✅ FIX: Validate token and reject if invalid
             if (jwtUtil.validateToken(token)) {
                 try {
                     String username = jwtUtil.extractUsername(token);
                     List<String> roles = jwtUtil.extractRoles(token);
 
-                    if (username != null) {
-                        List<SimpleGrantedAuthority> authorities;
-                        if (roles != null && !roles.isEmpty()) {
-                            authorities = roles.stream()
-                                    .map(role -> {
-                                        if (!role.startsWith("ROLE_")) {
-                                            return new SimpleGrantedAuthority("ROLE_" + role);
-                                        }
-                                        return new SimpleGrantedAuthority(role);
-                                    })
-                                    .collect(Collectors.toList());
-                        } else {
-                            authorities = List.of();
-                        }
-
+                    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        // CRITICAL FIX: Load full UserDetails object
+                        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                        
                         UsernamePasswordAuthenticationToken authentication = 
-                            new UsernamePasswordAuthenticationToken(username, null, authorities);
-
+                            new UsernamePasswordAuthenticationToken(
+                                userDetails,  // Use UserDetails, not just String
+                                null, 
+                                userDetails.getAuthorities()
+                            );
+                        
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
+                        
                         logger.debug("✅ Authenticated: {} with roles: {}", username, roles);
                     }
                 } catch (Exception e) {
@@ -70,16 +69,15 @@ public class JwtFilter extends OncePerRequestFilter {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("{\"error\": \"Invalid or malformed JWT token\"}");
                     response.setContentType("application/json");
-                    return; // ✅ STOP HERE - don't continue filter chain
+                    return;
                 }
             } else {
-                // ✅ FIX: Invalid/expired token = REJECT
                 logger.warn("❌ Invalid JWT token");
                 SecurityContextHolder.clearContext();
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("{\"error\": \"Invalid or expired JWT token\"}");
                 response.setContentType("application/json");
-                return; // ✅ STOP HERE - don't continue filter chain
+                return;
             }
         }
 

@@ -1,13 +1,13 @@
 package com.eiu.taskmanager.service;
 
-import com.eiu.taskmanager.model.Task;
-import com.eiu.taskmanager.service.TaskService;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.util.List;
+import com.eiu.taskmanager.model.Task;
 
 @Component
 public class TaskNotificationScheduler {
@@ -21,8 +21,8 @@ public class TaskNotificationScheduler {
         this.notificationService = notificationService;
     }
 
-    // Run every 5 minutes
-    @Scheduled(cron = "0 */5 * * * ?")
+    // Run every 2 minutes
+    @Scheduled(cron = "0 */2 * * * ?")
     public void sendDueDateNotifications() {
         List<Task> tasks = taskService.getAllTasks();
         LocalDate tomorrow = LocalDate.now().plusDays(1);
