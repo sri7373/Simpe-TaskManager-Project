@@ -33,6 +33,8 @@ public class Submission {
     @Column(name = "submitted_at")
     private LocalDateTime submittedAt = LocalDateTime.now();
 
+    // setters and getters
+    
     public void setSurveyForm(SurveyForm surveyForm) {
         this.surveyForm = surveyForm;
     }

@@ -31,7 +31,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         question.setSurveyForm(form);
 
-        // Set displayOrder to last position
+        // Set displayOrder to last position, so that most recently added qn goes to the back
         int maxOrder = questionRepository.findMaxDisplayOrderByFormId(formId).orElse(0);
         question.setDisplayOrder(maxOrder + 1);
 

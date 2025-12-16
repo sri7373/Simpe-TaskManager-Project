@@ -28,6 +28,8 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Override
     public Submission createSubmission(SurveyForm form, User user) {
 
+        // Each user can only submit a form once
+
         if (hasUserSubmittedForm(form, user)) {
             throw new RuntimeException("User has already submitted this form");
         }
@@ -58,7 +60,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .existsBySurveyFormIdAndUser_Id(form.getId(), user.getId());
     }
 
-    @Override
+@Override
 @Transactional
 public void deleteSubmission(UUID submissionId, User currentUser) {
 

@@ -71,7 +71,7 @@ public class SurveyFormController {
     @DeleteMapping("/{formId}")
     public ResponseEntity<Void> deleteSurveyForm(@PathVariable UUID formId) {
 
-        // ✅ Use the service to get current user safely
+        // Use the service to get current user safely
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.getUserByUsername(username);
 
